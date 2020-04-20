@@ -127,6 +127,8 @@ void PopulateSTUDENTdb() {
 
     // Run the SQL (convert the string to a C-String with c_str() )
     rc = sqlite3_exec(db, sql.c_str(), callback, 0, &zErrMsg);
+    
+   
 }
 void PopulateCOURSEdb() {
     starsq();
@@ -450,7 +452,7 @@ void DeleteCourseName() {
 
     string choicename = "";
     string answ = "";
-    cout << "What is the name of course: ";
+    cout << "What is the ID of course: ";
     cin >> choicename;
     cout << endl;
     starsq();
@@ -462,6 +464,58 @@ void DeleteCourseName() {
         starsq();
         // Save SQL insert data
         sql = " DELETE FROM COURSE WHERE NAME='" + choicename + "';";
+        // Run the SQL (convert the string to a C-String with c_str() )
+        rc = sqlite3_exec(db, sql.c_str(), callback, 0, &zErrMsg);
+        // Close the SQL connection
+
+        sqlite3_close(db);
+        cout << "Data is deleted" << endl;
+    }
+}
+//DELETE in ATTEND table by COURSEID
+void DeleteAttendbyCourseID() {
+
+    
+    string choieid = "";
+    string answ = "";
+    cout << "What is the id of course: ";
+    cin >> choieid;
+    cout << endl;
+    starsq();
+    SelectCourseID(choieid);
+    cout << "Are you sure you want to delete the data? (Y/N)" << endl;
+    cin >> answ;
+    if (answ == "y")
+    {
+        starsq();
+        // Save SQL insert data
+        sql = " DELETE FROM ATTEND WHERE COURSEID='" + choieid + "';";
+        // Run the SQL (convert the string to a C-String with c_str() )
+        rc = sqlite3_exec(db, sql.c_str(), callback, 0, &zErrMsg);
+        // Close the SQL connection
+
+        sqlite3_close(db);
+        cout << "Data is deleted" << endl;
+    }
+}
+//DELETE in ATTEND table by STUDENTID
+void DeleteAttendbyStudentID() {
+
+
+    string choieid = "";
+    string answ = "";
+    cout << "What is the ID of the student: ";
+    cin >> choieid;
+    cout << endl;
+    starsq();
+    SelectStudentID(choieid);
+    cout << "Are you sure you want to delete the data? (Y/N)" << endl;
+    cin >> answ;
+    if (answ == "y")
+    {
+        starsq();
+        // Save SQL insert data
+        sql = " DELETE FROM ATTEND WHERE STUDENT='" + choieid + "';";
         // Run the SQL (convert the string to a C-String with c_str() )
         rc = sqlite3_exec(db, sql.c_str(), callback, 0, &zErrMsg);
         // Close the SQL connection
@@ -515,9 +569,10 @@ int main() {
     string userinput = "";
     
     //init
+    
     starsq();
     init();
-    
+
     // simple lazy Interface
    do{
     cout << "WELCOME TO DATABASE ver1.2" << endl;
@@ -536,7 +591,7 @@ int main() {
 
         do
         {
-        cout << "WELCOME TO DATABASE ver1.2" << endl;
+        cout << "WELCOME TO DATABASE ver1.2 for USER" << endl;
         cout << "Choose (1) to Check database. \nChoose (2) to Search for Classes.\nChoose (3) to Insert data.\nChoose (4) to Delete data.\nChoose (0) to Log-off ." << endl;
         cout << "Please choose a number: ";
         cin >> choicemain;
@@ -618,7 +673,7 @@ int main() {
         else if (choicemain == "4") {
             do{
             cout << "\nYou have accessed the Delete" << endl;
-            cout << "Choose (1) to Delete Student's information.\nChoose (2) to Delete Course's information.\nChoose (3) to Drop Tables.\nChoose (0) to go back." << endl;
+            cout << "Choose (1) to Delete Student's information.\nChoose (2) to Delete Course's information.\nChoose (3) to Delete Student from all courses.\nChoose (4) to Delete Course for all attended student.\nChoose (5) to Drop Tables.\nChoose (0) to go back." << endl;
             cout << "Please choose a number: ";
             cin >> choice;
             cin.ignore();
@@ -628,11 +683,18 @@ int main() {
                 DeleteStudentName();
             }
 
-            else if (choice == "2") 
+            else if (choice == "2")
             {
                 DeleteCourseName();
             }
             else if (choice == "3") {
+                DeleteAttendbyStudentID();
+            }
+            else if (choice == "4") {
+                DeleteAttendbyCourseID();
+            }
+            else if(choice=="5")
+            {
                 DropTables();
             }
             
@@ -726,6 +788,7 @@ int main() {
 
     //Populate the tables
     else if(choicelogin=="4"){
+        init();
         PopulateSTUDENTdb();
         PopulateCOURSEdb();
         PopulateLOGINdb();
