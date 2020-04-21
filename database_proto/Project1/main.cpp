@@ -20,7 +20,6 @@ int callback(void* NotUsed, int argc, char** argv, char** azColName) {
     // int argc: holds the number of results
     // (array) azColName: holds each column returned
     // (array) argv: holds each value
-
     for (int i = 0; i < argc; i++) {
 
         // Show column name, value, and newline
@@ -203,6 +202,12 @@ void PopulateLOGINdb() {
 
     // Run the SQL (convert the string to a C-String with c_str() )
     rc = sqlite3_exec(db, sql.c_str(), callback, 0, &zErrMsg);
+}
+void PopulateTables() {
+    PopulateSTUDENTdb();
+    PopulateCOURSEdb();
+    PopulateATTENDdb();
+    PopulateLOGINdb();
 }
 ///done creating and populating tables 
 
@@ -789,10 +794,7 @@ int main() {
     //Populate the tables
     else if(choicelogin=="4"){
         init();
-        PopulateSTUDENTdb();
-        PopulateCOURSEdb();
-        PopulateLOGINdb();
-        PopulateATTENDdb(); }
+        PopulateTables(); }
 
     } while (choicelogin != "0");
      
